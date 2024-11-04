@@ -125,8 +125,9 @@
             const itemDiv = document.createElement("div");
             itemDiv.classList.add("flex", "items-center", "justify-between", "p-4", "rounded-lg", "bg-white", "hover:bg-indigo-100", "cursor-pointer", "fade-in");
 
+// lock unlock value
             // Check if the item is locked
-            const isLocked = index > 0 && items[index - 1].progress < 100;
+            const isLocked = index > 0 && items[index - 1].progress < 40;
 
             // Progress Circle Container
             const progressContainer = document.createElement("div");
@@ -177,7 +178,7 @@
             } else {
                 itemDiv.classList.add("opacity-50"); // Make locked items appear faded
                 itemDiv.addEventListener("click", () => {
-                    showToast("অনুগ্রহ করে পূর্ববর্তী মডেল টেস্ট ১০০% সম্পূর্ণ করুন।");
+                    showToast("অনুগ্রহ করে পূর্ববর্তী মডেল টেস্ট ৪০% সম্পূর্ণ করুন।");
                 });
             }
         });
@@ -296,11 +297,21 @@
         const totalMarks = correctCount - (incorrectCount * 0.25);
         const progressPercentage = ((correctCount / results.length) * 100).toFixed(2);
 
-        // Update progress for the item and store it in local storage
         if (currentQuizItem) {
-            currentQuizItem.progress = progressPercentage;
-            setProgressToLocalStorage(currentQuizItem.id, progressPercentage);
-        }
+    // Store the progress percentage
+    const calculatedProgress = progressPercentage; // Use the calculated value for display
+    setProgressToLocalStorage(currentQuizItem.id, calculatedProgress);
+
+    // Update progress to unlock next item if 50% or more
+    if (calculatedProgress >= 50) {
+        // Set a separate property or flag to indicate the item is unlocked
+        currentQuizItem.isUnlocked = true; // You can use a separate flag if needed
+    }
+
+    // For display purposes, keep the actual progress as is
+    currentQuizItem.progress = calculatedProgress; // Store calculated progress for display
+    setProgressToLocalStorage(currentQuizItem.id, calculatedProgress);
+}
 
         contentDisplay.innerHTML = `
             <h2 class="text-2xl text-indigo-600 font-bold">Quiz Results</h2>
@@ -370,6 +381,8 @@
     }
 })();
 </script>
+
+
 
 
 </body>
