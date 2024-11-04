@@ -76,6 +76,11 @@
                     "question": "2.কে কোষ বিভাজন আবিষ্কার করেন?",
                     "options": ["ক.ফ্লেমিং", "খ.বোভেরী", "গ.স্ট্রাসবার্জার", "ঘ.শ্লাইখার"],
                     "correctAnswer": "ক.ফ্লেমিং"
+                },
+                 {
+                    "question": "2.কে কোষ বিভাজন আবিষ্কার করেন?",
+                    "options": ["ক.ফ্লেমিং", "খ.বোভেরী", "গ.স্ট্রাসবার্জার", "ঘ.শ্লাইখার"],
+                    "correctAnswer": "ক.ফ্লেমিং"
                 }
             ]
         },
@@ -171,12 +176,30 @@
                 });
             } else {
                 itemDiv.classList.add("opacity-50"); // Make locked items appear faded
+                itemDiv.addEventListener("click", () => {
+                    showToast("অনুগ্রহ করে পূর্ববর্তী মডেল টেস্ট ১০০% সম্পূর্ণ করুন।");
+                });
             }
         });
 
         setTimeout(() => {
             itemList.querySelectorAll('.fade-in').forEach(el => el.classList.add('show'));
         }, 10);
+    }
+
+    function showToast(message) {
+        const toast = document.createElement("div");
+        toast.classList.add("fixed", "bottom-5", "left-1/2", "transform", "-translate-x-1/2", "bg-indigo-600", "text-white", "px-4", "py-2", "rounded-lg", "shadow-lg", "opacity-100", "transition-opacity", "duration-300", "ease-in-out");
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.remove("opacity-100");
+            toast.classList.add("opacity-0");
+            setTimeout(() => {
+                toast.remove();
+            }, 300); // Time to wait before removing the toast
+        }, 2000); // Duration the toast is visible
     }
 
     function showQuiz(quizArray, item) {
@@ -209,7 +232,7 @@
                     <div class="options space-y-2">`;
             question.options.forEach(option => {
                 htmlContent += `
-                    <button class="option w-full text-left p-2 rounded bg-gray-100" onclick="selectOption(this, '${question.correctAnswer}', ${index})">
+                    <button class="option w-full text-left p-2 rounded bg-gray-100 hover:bg-gray-200" onclick="selectOption(this, '${question.correctAnswer}', ${index})">
                         ${option}
                     </button>`;
             });
@@ -219,7 +242,7 @@
         });
 
         htmlContent += `
-            <button type="button" class="w-full px-4 py-3 bg-indigo-600 text-white rounded" onclick="submitQuiz()">Submit Answers</button>
+            <button type="button" class="w-full px-4 py-3 bg-indigo-600 text-white rounded hover:bg-indigo-700" onclick="submitQuiz()">Submit Answers</button>
         </div>
     </div>`;
 
@@ -232,7 +255,7 @@
             timerDisplay.textContent = formatTime(timeLeft);
             if (timeLeft <= 0) {
                 clearInterval(timer);
-                alert("Time's up! Submitting your answers.");
+                alert("Time's up!");
                 submitQuiz();
             }
         }, 1000);
@@ -241,7 +264,7 @@
     function formatTime(seconds) {
         const minutes = Math.floor(seconds / 60);
         const secs = seconds % 60;
-        return `${minutes}m ${secs}s`;
+        return `${minutes < 10 ? '0' : ''}${minutes}:${secs < 10 ? '0' : ''}${secs}`;
     }
 
     window.selectOption = function(button, correctAnswer, questionIndex) {
@@ -347,7 +370,6 @@
     }
 })();
 </script>
-
 
 
 </body>
